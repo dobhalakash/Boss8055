@@ -54,12 +54,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   yearGoals: YearGoal[] = [];
 
   quickActions: QuickAction[] = [
-    { icon: '🏋️', label: 'Log Workout', route: 'gym' },
-    { icon: '💧', label: 'Add Water', route: 'water' },
-    { icon: '🏃', label: 'Log Run', route: 'running' },
-    { icon: '📋', label: 'New Task', route: 'tasks' },
-    { icon: '🍽️', label: 'Log Meal', route: 'food' },
-    { icon: '🎯', label: 'Set Goal', route: 'goals' }
+   { icon: '🏋️', label: 'Log Workout', route: 'gym' },
+{ icon: '💧', label: 'Add Water', route: 'water' },
+{ icon: '🏃', label: 'Log Run', route: 'running' },
+{ icon: '📋', label: 'New Task', route: 'tasks' },
+{ icon: '🍽️', label: 'Log Meal', route: 'food' },
+{ icon: '🎯', label: 'Set Goal', route: 'goals' },
+{ icon: '💰', label: 'Finance', route: 'FinanceTracker' },
+{ icon: '🌍', label: 'Adventure', route: 'adventures' },
+{ icon: '📅', label: 'Timetable', route: 'timetable' },
+{ icon: '⚖️', label: 'Weight', route: 'weight' }
   ];
 
   constructor(

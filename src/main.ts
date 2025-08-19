@@ -13,7 +13,12 @@ import { NavigationComponent } from './app/components/navigation/navigation.comp
   imports: [CommonModule, RouterOutlet, NavigationComponent],
   template: `
     <div class="app-container">
-      <app-navigation></app-navigation>
+      <!-- Header / Navigation -->
+      <header class="app-header">
+        <app-navigation></app-navigation>
+      </header>
+
+      <!-- Main Content -->
       <main class="main-content">
         <router-outlet></router-outlet>
       </main>
@@ -21,18 +26,30 @@ import { NavigationComponent } from './app/components/navigation/navigation.comp
   `,
   styles: [`
     .app-container {
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
       background: var(--bg-primary);
     }
-    
-    .main-content {
-      padding-top: 70px;
-      min-height: 100vh;
+
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
     }
-    
+
+    .main-content {
+      flex: 1;
+      padding-top: 70px; /* Matches nav height */
+      min-height: calc(100vh - 70px);
+    }
+
     @media (max-width: 480px) {
       .main-content {
-        padding-top: 60px;
+        padding-top: 60px; /* Adjust for smaller nav on mobile */
+        min-height: calc(100vh - 60px);
       }
     }
   `]
@@ -40,7 +57,5 @@ import { NavigationComponent } from './app/components/navigation/navigation.comp
 export class App {}
 
 bootstrapApplication(App, {
-  providers: [
-    provideRouter(routes)
-  ]
+  providers: [provideRouter(routes)]
 }).catch(err => console.error(err));

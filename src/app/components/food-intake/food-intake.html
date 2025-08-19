@@ -1,0 +1,84 @@
+<div class="food-container">
+  <h2>🍽 Food Intake Tracker</h2>
+
+  <!-- Summary -->
+  <div class="summary">
+    <p><strong>Total Calories:</strong> {{ getTotalCalories() }} kcal</p>
+    <p><strong>Protein:</strong> {{ getTotalProtein() }} g</p>
+    <p><strong>Carbs:</strong> {{ getTotalCarbs() }} g</p>
+    <p><strong>Fat:</strong> {{ getTotalFat() }} g</p>
+  </div>
+
+  <button class="btn-add" (click)="openAddModal()">➕ Add Food</button>
+
+  <!-- Food List -->
+  <table class="food-table" *ngIf="foodEntries.length > 0; else noFood">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Food</th>
+        <th>Calories</th>
+        <th>Protein</th>
+        <th>Carbs</th>
+        <th>Fat</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entry of foodEntries; trackBy: trackByFoodId">
+        <td>{{ entry.date | date:'MMM d, y' }}</td>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.calories }}</td>
+        <td>{{ entry.protein }}</td>
+        <td>{{ entry.carbs }}</td>
+        <td>{{ entry.fat }}</td>
+        <td>
+          <button class="btn-edit" (click)="editEntry(entry)">✏️</button>
+          <button class="btn-delete" (click)="deleteEntry(entry.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noFood>
+    <p class="empty">No food entries yet. Add some! 🍎</p>
+  </ng-template>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <h3>{{ editingEntry ? 'Edit Food Entry' : 'Add Food Entry' }}</h3>
+      <form>
+        <label>
+          Date:
+          <input type="date" [(ngModel)]="currentEntry.date" name="date">
+        </label>
+        <label>
+          Food Name:
+          <input type="text" [(ngModel)]="currentEntry.name" name="name">
+        </label>
+        <label>
+          Calories:
+          <input type="number" [(ngModel)]="currentEntry.calories" name="calories">
+        </label>
+        <label>
+          Protein (g):
+          <input type="number" [(ngModel)]="currentEntry.protein" name="protein">
+        </label>
+        <label>
+          Carbs (g):
+          <input type="number" [(ngModel)]="currentEntry.carbs" name="carbs">
+        </label>
+        <label>
+          Fat (g):
+          <input type="number" [(ngModel)]="currentEntry.fat" name="fat">
+        </label>
+
+        <div class="actions">
+          <button type="button" class="btn-save" (click)="saveEntry()">💾 Save</button>
+          <button type="button" class="btn-cancel" (click)="closeModal()">❌ Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

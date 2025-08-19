@@ -1,0 +1,86 @@
+.finance-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+  animation: fadeInSlide 1s ease forwards;
+}
+
+/* Add Entry Form */
+.add-entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  animation: fadeInSlide 0.8s ease forwards;
+}
+.add-entry input, .add-entry select, .add-entry button {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.add-entry button {
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Summary Cards */
+.summary-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  animation: fadeInSlide 1s ease forwards;
+}
+.summary-card {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
+.summary-card.income { background: linear-gradient(45deg,#4caf50,#81c784); }
+.summary-card.expense { background: linear-gradient(45deg,#f44336,#e57373); }
+.summary-card.saving { background: linear-gradient(45deg,#2196f3,#64b5f6); }
+
+/* Entries List */
+.entries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: fadeInSlide 1.2s ease forwards;
+}
+.entry-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: #fff;
+}
+.entry-card.income { background: #4caf50; }
+.entry-card.expense { background: #f44336; }
+.entry-card.saving { background: #2196f3; }
+.entry-card button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeInSlide {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeInSlide 1s ease forwards; }
+.slide-up { animation: fadeInSlide 0.8s ease forwards; }

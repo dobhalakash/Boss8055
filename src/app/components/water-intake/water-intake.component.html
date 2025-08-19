@@ -1,0 +1,165 @@
+<div class="water-intake-container fade-in">
+  <div class="container">
+    <div class="nav-spacer"></div>
+    
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">💧 Water Intake</h1>
+      <button class="btn btn-accent" (click)="openAddModal()">
+        <span class="btn-icon">💧</span>
+        Add Water
+      </button>
+    </div>
+
+    <!-- Today's Progress -->
+    <div class="progress-section glass-card slide-up">
+      <div class="progress-header">
+        <h3 class="progress-title">Today's Progress</h3>
+        <div class="progress-date">{{ today | date:'fullDate' }}</div>
+      </div>
+      
+      <div class="water-progress">
+        <div class="water-visual">
+          <div class="water-bottle">
+            <div class="water-fill" [style.height.%]="todayProgressPercentage">
+              <div class="water-wave"></div>
+            </div>
+            <div class="bottle-marks">
+              <div class="mark" *ngFor="let mark of bottleMarks" [style.bottom.%]="mark">
+                <span class="mark-line"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="progress-info">
+          <div class="progress-stats">
+            <div class="stat-item">
+              <div class="stat-number">{{ todayIntake }}</div>
+              <div class="stat-label">ml consumed</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ dailyTarget }}</div>
+              <div class="stat-label">ml target</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ remainingIntake }}</div>
+              <div class="stat-label">ml remaining</div>
+            </div>
+          </div>
+          
+          <div class="quick-add-buttons">
+            <button class="quick-add-btn" *ngFor="let amount of quickAmounts" 
+                    (click)="quickAddWater(amount)">
+              <span class="amount">{{ amount }}ml</span>
+              <span class="glass-icon">🥤</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Water Intake History -->
+    <div class="history-section">
+      <div class="history-header">
+        <h3 class="section-title">Intake History</h3>
+        <div class="history-filters">
+          <button class="filter-btn" 
+                  [class.active]="selectedFilter === filter"
+                  *ngFor="let filter of filterOptions"
+                  (click)="setFilter(filter)">
+            {{ filter }}
+          </button>
+        </div>
+      </div>
+
+      <div class="intake-logs">
+        <div class="log-day" *ngFor="let day of groupedIntakes">
+          <div class="day-header">
+            <div class="day-date">{{ day.date | date:'fullDate' }}</div>
+            <div class="day-total">{{ day.total }}ml</div>
+          </div>
+          <div class="day-entries">
+            <div class="intake-entry" *ngFor="let entry of day.entries; trackBy: trackByEntryId">
+              <div class="entry-time">{{ entry.time }}</div>
+              <div class="entry-amount">{{ entry.amount }}ml</div>
+              <div class="entry-glass">💧</div>
+              <button class="delete-btn" (click)="deleteIntake(entry.id)">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="waterIntakes.length === 0">
+        <div class="empty-icon">💧</div>
+        <h3>No water intake logged yet</h3>
+        <p>Start tracking your daily hydration!</p>
+        <button class="btn btn-accent" (click)="openAddModal()">Add First Entry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Water Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">Add Water Intake</h3>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </div>
+    <form (ngSubmit)="saveIntake()" #intakeForm="ngForm" class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Amount (ml)</label>
+        <input 
+          type="number" 
+          class="form-input" 
+          [(ngModel)]="currentIntake.amount"
+          name="amount"
+          min="1"
+          max="2000"
+          required
+          placeholder="250">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input 
+          type="date" 
+          class="form-input" 
+          [(ngModel)]="currentIntakeDate"
+          name="date"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Time</label>
+        <input 
+          type="time" 
+          class="form-input" 
+          [(ngModel)]="currentIntake.time"
+          name="time"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Daily Target (ml)</label>
+        <input 
+          type="number" 
+          class="form-input" 
+          [(ngModel)]="currentIntake.target"
+          name="target"
+          min="1000"
+          max="5000"
+          required
+          placeholder="2500">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-accent" [disabled]="!intakeForm.valid">
+          Add Intake
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

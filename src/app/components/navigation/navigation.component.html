@@ -1,0 +1,51 @@
+<nav class="navigation">
+  <div class="nav-brand">
+    <div class="brand-logo">
+      <span class="logo-icon">🚀</span>
+      <span class="logo-text">SurajHUB</span>
+    </div>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <div class="nav-links desktop-nav">
+    <a 
+      *ngFor="let item of navigationItems" 
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="nav-link"
+      [class.exact]="item.exact"
+    >
+      <span class="nav-icon">{{ item.icon }}</span>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  </div>
+
+  <!-- Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+    <span class="hamburger" [class.open]="isMobileMenuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </button>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <div class="mobile-nav-content">
+      <a 
+        *ngFor="let item of navigationItems" 
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="mobile-nav-link"
+        [class.exact]="item.exact"
+        (click)="closeMobileMenu()"
+      >
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" [class.open]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+</nav>

@@ -1,0 +1,33 @@
+<div class="timetable-container">
+  <h2>Weekly Timetable</h2>
+
+  <div class="add-activity">
+    <label for="day">Day:</label>
+    <select [(ngModel)]="selectedDay" id="day">
+      <option *ngFor="let entry of timetable" [value]="entry.day">{{ entry.day }}</option>
+    </select>
+
+    <input type="text" [(ngModel)]="newActivity" placeholder="New activity" />
+    <button (click)="addActivity()">Add</button>
+  </div>
+
+  <div class="timetable-grid">
+    <div class="day-card" *ngFor="let entry of timetable">
+      <h3>{{ entry.day }}</h3>
+      <ul>
+        <li *ngFor="let activity of entry.activities; let i = index" 
+            [class.completed]="activity.completed">
+          <span (click)="toggleCompleted(entry.day, i)">
+            {{ activity.name }}
+          </span>
+          <div class="actions">
+            <button class="done-btn" (click)="toggleCompleted(entry.day, i)">
+              {{ activity.completed ? 'Undo' : 'Done' }}
+            </button>
+            <button class="remove-btn" (click)="removeActivity(entry.day, i)">✖</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

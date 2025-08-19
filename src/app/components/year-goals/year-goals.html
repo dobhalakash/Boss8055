@@ -1,0 +1,43 @@
+<section class="year-goals fade-in-up">
+  <h2>🎯 My Year Goals ({{ currentYear }})</h2>
+
+  <button class="add-btn" (click)="openAddModal()">➕ Add Goal</button>
+
+  <ul>
+    <li *ngFor="let goal of goals; trackBy: trackByGoalId">
+      <div class="goal-card">
+        <strong>{{ goal.place }}</strong> – {{ goal.days }} days ({{ goal.progress }}%)
+        <div class="actions">
+          <button (click)="editGoal(goal)">✏ Edit</button>
+          <button (click)="deleteGoal(goal.id)">🗑 Delete</button>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <p class="summary">📌 Total Days Planned: {{ getTotalDays() }}</p>
+
+  <!-- ✅ Modal -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content slide-up">
+      <h3>{{ editingGoal ? '✏ Edit Goal' : '➕ Add Goal' }}</h3>
+
+      <label>Place:</label>
+      <input type="text" [(ngModel)]="currentGoal.place" />
+
+      <label>Days:</label>
+      <input type="number" [(ngModel)]="currentGoal.days" />
+
+      <label>Year:</label>
+      <input type="number" [(ngModel)]="currentGoal.year" />
+
+      <label>Progress (%):</label>
+      <input type="number" [(ngModel)]="currentGoal.progress" min="0" max="100" />
+
+      <div class="modal-actions">
+        <button (click)="saveGoal()">💾 Save</button>
+        <button class="cancel" (click)="closeModal()">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+</section>

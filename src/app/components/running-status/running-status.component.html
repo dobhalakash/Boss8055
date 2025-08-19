@@ -1,0 +1,211 @@
+<div class="running-container fade-in">
+  <div class="container">
+    <div class="nav-spacer"></div>
+    
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">🏃 Running Status</h1>
+      <button class="btn btn-success" (click)="openAddModal()">
+        <span class="btn-icon">🏃</span>
+        Log Run
+      </button>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid grid grid-4 slide-up">
+      <div class="glass-card stat-card">
+        <div class="stat-icon success-gradient">🏃</div>
+        <div class="stat-number">{{ runningData.length }}</div>
+        <div class="stat-label">Total Runs</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon accent-gradient">📍</div>
+        <div class="stat-number">{{ getTotalDistance() }}</div>
+        <div class="stat-label">Total KM</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon warning-gradient">⏱️</div>
+        <div class="stat-number">{{ getAveragePace() }}</div>
+        <div class="stat-label">Avg Pace (min/km)</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon secondary-gradient">🔥</div>
+        <div class="stat-number">{{ getTotalCalories() }}</div>
+        <div class="stat-label">Total Calories</div>
+      </div>
+    </div>
+
+    <!-- Recent Runs -->
+    <div class="runs-section">
+      <div class="section-header">
+        <h3 class="section-title">Recent Runs</h3>
+      </div>
+      
+      <div class="runs-grid grid grid-2">
+        <div class="glass-card run-card" *ngFor="let run of runningData; trackBy: trackByRunId">
+          <div class="run-header">
+            <div class="run-date">{{ run.date | date:'MMM d, y' }}</div>
+            <div class="run-route" *ngIf="run.route">📍 {{ run.route }}</div>
+          </div>
+          
+          <div class="run-metrics">
+            <div class="metric">
+              <div class="metric-icon">📍</div>
+              <div class="metric-info">
+                <div class="metric-value">{{ run.distance }} km</div>
+                <div class="metric-label">Distance</div>
+              </div>
+            </div>
+            
+            <div class="metric">
+              <div class="metric-icon">⏱️</div>
+              <div class="metric-info">
+                <div class="metric-value">{{ formatDuration(run.duration) }}</div>
+                <div class="metric-label">Duration</div>
+              </div>
+            </div>
+            
+            <div class="metric">
+              <div class="metric-icon">🏃</div>
+              <div class="metric-info">
+                <div class="metric-value">{{ run.pace.toFixed(1) }}'</div>
+                <div class="metric-label">Pace /km</div>
+              </div>
+            </div>
+            
+            <div class="metric">
+              <div class="metric-icon">🔥</div>
+              <div class="metric-info">
+                <div class="metric-value">{{ run.calories }}</div>
+                <div class="metric-label">Calories</div>
+              </div>
+            </div>
+
+            <!-- New Weight Metric -->
+            <div class="metric" *ngIf="run.weight">
+              <div class="metric-icon">⚖️</div>
+              <div class="metric-info">
+                <div class="metric-value">{{ run.weight }} kg</div>
+                <div class="metric-label">Weight</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="run-actions">
+            <button class="btn-icon edit-btn" (click)="editRun(run)">✏️</button>
+            <button class="btn-icon delete-btn" (click)="deleteRun(run.id)">🗑️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="runningData.length === 0">
+        <div class="empty-icon">🏃</div>
+        <h3>No runs logged yet</h3>
+        <p>Start tracking your running journey!</p>
+        <button class="btn btn-success" (click)="openAddModal()">Log First Run</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Run Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ editingRun ? 'Edit' : 'Log' }} Run</h3>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </div>
+    <form (ngSubmit)="saveRun()" #runForm="ngForm" class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input 
+          type="date" 
+          class="form-input" 
+          [(ngModel)]="currentRunDate"
+          name="date"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Distance (km)</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentRun.distance"
+            name="distance"
+            min="0.1"
+            step="0.1"
+            required
+            placeholder="5.0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration (minutes)</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentRun.duration"
+            name="duration"
+            min="1"
+            required
+            placeholder="30">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Pace (min/km)</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentRun.pace"
+            name="pace"
+            min="0.1"
+            step="0.1"
+            required
+            placeholder="6.0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Calories Burned</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentRun.calories"
+            name="calories"
+            min="1"
+            required
+            placeholder="300">
+        </div>
+      </div>
+
+      <!-- New Weight Input -->
+      <div class="form-group">
+        <label class="form-label">Weight (kg)</label>
+        <input 
+          type="number" 
+          class="form-input" 
+          [(ngModel)]="currentRun.weight"
+          name="weight"
+          min="1"
+          placeholder="70">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Route (Optional)</label>
+        <input 
+          type="text" 
+          class="form-input" 
+          [(ngModel)]="currentRun.route"
+          name="route"
+          placeholder="e.g., Park Loop, Beach Trail">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-success" [disabled]="!runForm.valid">
+          {{ editingRun ? 'Update' : 'Log' }} Run
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

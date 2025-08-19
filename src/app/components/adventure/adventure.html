@@ -1,0 +1,26 @@
+<div class="adventure-container">
+  <h2>Adventure Plans</h2>
+
+  <!-- Add new adventure -->
+  <form (ngSubmit)="addAdventure()" class="adventure-form">
+    <input type="text" [(ngModel)]="newAdventure.name" name="name" placeholder="Adventure name" required />
+    <input type="text" [(ngModel)]="newAdventure.location" name="location" placeholder="Location" required />
+    <input type="date" [(ngModel)]="newAdventure.date" name="date" required />
+    <button type="submit">Add</button>
+  </form>
+
+  <!-- Adventure list -->
+  <ul class="adventure-list">
+    <li *ngFor="let adv of adventures; let i = index" [class.completed]="adv.completed">
+      <div class="adventure-item">
+        <span>{{ adv.name }} - {{ adv.location }} ({{ adv.date }})</span>
+        <div class="actions">
+          <button (click)="toggleCompleted(i)">
+            {{ adv.completed ? 'Undo' : 'Mark Completed' }}
+          </button>
+          <button (click)="removeAdventure(i)" class="remove">Remove</button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

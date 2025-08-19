@@ -1,0 +1,72 @@
+<div class="tasks-container fade-in">
+  <h2>📝 Daily Tasks</h2>
+
+  <!-- Stats -->
+  <div class="stats slide-up">
+    <span class="completed">✅ Completed: {{ getCompletedCount() }}</span>
+    <span class="pending">🕒 Pending: {{ getPendingCount() }}</span>
+  </div>
+
+  <!-- Add Task Button -->
+  <button class="add-btn slide-up" (click)="openAddModal()">+ Add Task</button>
+
+  <!-- Task Cards -->
+  <div class="tasks-grid slide-up" *ngIf="tasks.length > 0; else noTasks">
+    <div *ngFor="let task of tasks; trackBy: trackByTaskId" 
+         [ngClass]="{ high: task.priority==='High', medium: task.priority==='Medium', low: task.priority==='Low', completed: task.completed }"
+         class="task-card fade-in">
+      <div class="task-header">
+        <h3>{{ task.title }}</h3>
+        <span class="task-date">{{ task.date | date:'mediumDate' }}</span>
+      </div>
+      <p class="task-desc">{{ task.description }}</p>
+      <div class="task-footer">
+        <span class="task-priority">{{ task.priority }}</span>
+        <span class="task-status">{{ task.completed ? '✅ Done' : '🕒 Pending' }}</span>
+        <div class="task-actions">
+          <button class="edit-btn" (click)="editTask(task)">✏️</button>
+          <button class="delete-btn" (click)="deleteTask(task.id)">🗑️</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noTasks>
+    <p class="no-data slide-up">No tasks yet. Add one!</p>
+  </ng-template>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content slide-up">
+      <h3>{{ editingTask ? 'Edit Task' : 'Add Task' }}</h3>
+
+      <form>
+        <label>Title:</label>
+        <input type="text" [(ngModel)]="currentTask.title" name="title" />
+
+        <label>Description:</label>
+        <textarea [(ngModel)]="currentTask.description" name="description"></textarea>
+
+        <label>Date:</label>
+        <input type="date" [(ngModel)]="currentTaskDate" name="date" />
+
+        <label>Priority:</label>
+        <select [(ngModel)]="currentTask.priority" name="priority">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+
+        <label>
+          <input type="checkbox" [(ngModel)]="currentTask.completed" name="completed" />
+          Completed
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" class="save-btn" (click)="saveTask()">Save</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

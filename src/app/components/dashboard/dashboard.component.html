@@ -1,0 +1,146 @@
+<div class="dashboard-container fade-in">
+  <div class="container">
+    <!-- Header -->
+    <div class="dashboard-header slide-down">
+      <div class="header-content">
+        <h1 class="welcome-title rainbow-text">Welcome to SurajHUB</h1>
+        <p class="welcome-subtitle">Your personal life management center</p>
+      </div>
+      <div class="date-info">
+        <div class="current-date glow-text">{{ currentDate | date:'fullDate' }}</div>
+        <div class="current-time pulse">{{ currentTime }}</div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid grid grid-4 slide-up">
+      <div class="glass-card stat-card hover-zoom" *ngFor="let stat of quickStats">
+        <div class="stat-icon floating" [style.background]="stat.gradient">
+          <span class="icon">{{ stat.icon }}</span>
+        </div>
+        <div class="stat-number">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid grid grid-3">
+      <!-- Today's Progress -->
+      <div class="glass-card dashboard-card fade-slide">
+        <div class="card-header">
+          <h3 class="card-title">Today's Progress</h3>
+        </div>
+        <div class="progress-items">
+          <div class="progress-item" *ngFor="let progress of todayProgress">
+            <div class="progress-info">
+              <span class="progress-label">{{ progress.label }}</span>
+              <span class="progress-value">{{ progress.current }}/{{ progress.target }} {{ progress.unit }}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill animated-bar" [style.width.%]="progress.percentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="glass-card dashboard-card fade-slide">
+        <div class="card-header">
+          <h3 class="card-title">Recent Activities</h3>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item hover-glow" *ngFor="let activity of recentActivities">
+            <div class="activity-icon bouncing" [style.background]="activity.color">
+              <span class="icon">{{ activity.icon }}</span>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">{{ activity.title }}</div>
+              <div class="activity-time">{{ activity.time }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="glass-card dashboard-card fade-slide">
+        <div class="card-header">
+          <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="quick-actions">
+          <button class="btn btn-primary action-btn wave-btn" *ngFor="let action of quickActions" 
+                  (click)="navigateToSection(action.route)">
+            <span class="action-icon">{{ action.icon }}</span>
+            {{ action.label }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Schedule -->
+    <div class="glass-card schedule-card slide-up">
+      <div class="card-header">
+        <h3 class="card-title">Today's Schedule</h3>
+        <button class="btn btn-accent btn-sm" (click)="navigateToSection('timetable')">
+          View All
+        </button>
+      </div>
+      <div class="schedule-timeline">
+        <div class="timeline-item glowing-border" *ngFor="let event of todaySchedule">
+          <div class="timeline-time">{{ event.startTime }}</div>
+          <div class="timeline-content">
+            <div class="timeline-title">{{ event.title }}</div>
+            <div class="timeline-category">{{ event.category | titlecase }}</div>
+          </div>
+        </div>
+        <div class="no-events pulse" *ngIf="todaySchedule.length === 0">
+          <span class="icon">📅</span>
+          <p>No events scheduled for today</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goals Overview -->
+    <div class="goals-section slide-up">
+      <div class="goals-header">
+        <h3 class="section-title rainbow-text">Goals Overview</h3>
+      </div>
+      <div class="goals-grid grid grid-2">
+        <div class="glass-card goal-card hover-zoom">
+          <div class="goal-header">
+            <h4 class="goal-title">Adventure Goals</h4>
+            <span class="goal-count">{{ adventureGoals.length }} Active</span>
+          </div>
+          <div class="goal-progress">
+            <div class="progress-item" *ngFor="let goal of adventureGoals.slice(0, 3)">
+              <div class="progress-info">
+                <span class="progress-label">{{ goal.title }}</span>
+                <span class="progress-percentage">{{ goal.progress }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill animated-bar" [style.width.%]="goal.progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card goal-card hover-zoom">
+          <div class="goal-header">
+            <h4 class="goal-title">Year Goals</h4>
+            <span class="goal-count">{{ yearGoals.length }} Active</span>
+          </div>
+          <div class="goal-progress">
+            <div class="progress-item" *ngFor="let goal of yearGoals.slice(0, 3)">
+              <div class="progress-info">
+                <span class="progress-label">{{ goal.title }}</span>
+                <span class="progress-percentage">{{ goal.progress }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill animated-bar" [style.width.%]="goal.progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

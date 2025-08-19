@@ -1,0 +1,39 @@
+<div class="finance-container fade-in">
+  <h2>💰 Finance Tracker</h2>
+
+  <!-- Add New Entry -->
+  <div class="add-entry slide-up">
+    <select [(ngModel)]="newEntry.type">
+      <option value="Income">Income</option>
+      <option value="Expense">Expense</option>
+      <option value="Saving">Saving</option>
+    </select>
+    <input type="number" [(ngModel)]="newEntry.amount" placeholder="Amount" />
+    <input type="text" [(ngModel)]="newEntry.category" placeholder="Category" />
+    <input type="date" [(ngModel)]="newEntry.date" />
+    <button (click)="addEntry()">➕ Add</button>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-grid slide-up">
+    <div class="summary-card income">Income: ₹{{ getTotal('Income') }}</div>
+    <div class="summary-card expense">Expenses: ₹{{ getTotal('Expense') }}</div>
+    <div class="summary-card saving">Savings: ₹{{ getTotal('Saving') }}</div>
+    <div class="summary-card balance">Balance: ₹{{ getBalance() }}</div>
+  </div>
+
+  <!-- Entries List -->
+  <div class="entries-list slide-up">
+    <div *ngFor="let e of entries; trackBy: trackById" 
+         [ngClass]="{ income: e.type==='Income', expense: e.type==='Expense', saving: e.type==='Saving' }" 
+         class="entry-card">
+      <div class="entry-info">
+        <span>{{ e.type }}</span>
+        <span>{{ e.category }}</span>
+        <span>₹{{ e.amount }}</span>
+        <span>{{ e.date }}</span>
+      </div>
+      <button (click)="deleteEntry(e.id)">🗑️</button>
+    </div>
+  </div>
+</div>

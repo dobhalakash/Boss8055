@@ -1,0 +1,178 @@
+<div class="gym-logs-container fade-in">
+  <div class="container">
+    <div class="nav-spacer"></div>
+    
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">🏋️ Gym Logs</h1>
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <span class="btn-icon">➕</span>
+        Add Workout
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid grid grid-4 slide-up">
+      <div class="glass-card stat-card">
+        <div class="stat-icon">🏋️</div>
+        <div class="stat-number">{{ gymLogs.length }}</div>
+        <div class="stat-label">Total Workouts</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-number">{{ getTotalDuration() }}</div>
+        <div class="stat-label">Total Minutes</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-number">{{ getMaxWeight() }}</div>
+        <div class="stat-label">Max Weight (kg)</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-number">{{ getThisWeekWorkouts() }}</div>
+        <div class="stat-label">This Week</div>
+      </div>
+    </div>
+
+    <!-- Workout Logs -->
+    <div class="logs-section">
+      <div class="logs-grid grid grid-2">
+        <div class="glass-card log-card" *ngFor="let log of gymLogs; trackBy: trackByLogId">
+          <div class="log-header">
+            <div class="log-exercise">{{ log.exercise }}</div>
+            <div class="log-date">{{ log.date | date:'shortDate' }}</div>
+          </div>
+          <div class="log-details">
+            <div class="detail-item">
+              <span class="detail-label">Sets:</span>
+              <span class="detail-value">{{ log.sets }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Reps:</span>
+              <span class="detail-value">{{ log.reps }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Weight:</span>
+              <span class="detail-value">{{ log.weight }} kg</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Duration:</span>
+              <span class="detail-value">{{ log.duration }} min</span>
+            </div>
+          </div>
+          <div class="log-notes" *ngIf="log.notes">
+            <strong>Notes:</strong> {{ log.notes }}
+          </div>
+          <div class="log-actions">
+            <button class="btn-icon edit-btn" (click)="editLog(log)">✏️</button>
+            <button class="btn-icon delete-btn" (click)="deleteLog(log.id)">🗑️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="gymLogs.length === 0">
+        <div class="empty-icon">🏋️</div>
+        <h3>No workouts logged yet</h3>
+        <p>Start by adding your first workout session!</p>
+        <button class="btn btn-primary" (click)="openAddModal()">Add First Workout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ editingLog ? 'Edit' : 'Add' }} Workout</h3>
+      <button class="modal-close" (click)="closeModal()">✕</button>
+    </div>
+    <form (ngSubmit)="saveLog()" #logForm="ngForm" class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Exercise</label>
+        <input 
+          type="text" 
+          class="form-input" 
+          [(ngModel)]="currentLog.exercise"
+          name="exercise"
+          required
+          placeholder="e.g., Bench Press, Squat, Deadlift">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input 
+          type="date" 
+          class="form-input" 
+          [(ngModel)]="currentLogDate"
+          name="date"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sets</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentLog.sets"
+            name="sets"
+            min="1"
+            required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reps</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentLog.reps"
+            name="reps"
+            min="1"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Weight (kg)</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentLog.weight"
+            name="weight"
+            min="0"
+            step="0.5"
+            required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration (min)</label>
+          <input 
+            type="number" 
+            class="form-input" 
+            [(ngModel)]="currentLog.duration"
+            name="duration"
+            min="1"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes (Optional)</label>
+        <textarea 
+          class="form-input" 
+          [(ngModel)]="currentLog.notes"
+          name="notes"
+          rows="3"
+          placeholder="Any additional notes about this workout..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!logForm.valid">
+          {{ editingLog ? 'Update' : 'Add' }} Workout
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
